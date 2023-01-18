@@ -1,4 +1,4 @@
-package main
+package aua
 
 import (
 	"github.com/FloatTech/floatbox/web"
