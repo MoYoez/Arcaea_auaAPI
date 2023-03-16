@@ -64,5 +64,5 @@ func DrawRequestArc(workurl string, token string) (reply string, err error) {
 	}
 	defer replyByte.Body.Close()
 	reply = *(*string)(unsafe.Pointer(&replyByte.Body))
-	return
+	return reply, err
 }
