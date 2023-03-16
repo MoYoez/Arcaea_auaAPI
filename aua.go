@@ -1,9 +1,8 @@
-package aua
+package aua // Package aua
 
 import (
-	"github.com/FloatTech/floatbox/web"
-	"github.com/fumiama/jieba/util/helper"
 	"net/http"
+	"unsafe"
 )
 
 // GetUserInfo Url 为完整的 ArcaeaAPI 请求，token 为此项目需要用到的 Auth，id是需要查询使用的id。
@@ -57,16 +56,13 @@ func GetSongPreview(url string, token string, songname string, difficuity string
 }
 
 func DrawRequestArc(workurl string, token string) (reply string, err error) {
-	replyByte, err := web.RequestDataWithHeaders(web.NewDefaultClient(), workurl, "GET", func(r *http.Request) error {
-		r.Header.Set("accept-language", "zh,zh-CN;q=0.9,zh-HK;q=0.8,zh-TW;q=0.7,ja;q=0.6,en;q=0.5,en-GB;q=0.4,en-US;q=0.3")
-		r.Header.Set("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-		r.Header.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)  Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76")
-		r.Header.Set("Authorization", "Bearer "+token)
-		return nil
-	}, nil)
+	replyByte, err := http.Get(workurl)
+	replyByte.Header.Set("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+	replyByte.Header.Set("Authorization", "Bearer "+token)
 	if err != nil {
-		return "", err
+		return "nil", err
 	}
-	reply = helper.BytesToString(replyByte)
+	defer replyByte.Body.Close()
+	reply = *(*string)(unsafe.Pointer(&replyByte.Body))
 	return
 }
