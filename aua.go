@@ -1,6 +1,7 @@
 package aua // Package aua
 
 import (
+	"io"
 	"net/http"
 )
 
@@ -8,7 +9,7 @@ import (
 func GetUserInfo(url string, token string, arcaeaid string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/user/info?user="+arcaeaid+"&recent=1&withsonginfo=true", token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	return reply, err
 }
@@ -17,7 +18,7 @@ func GetUserInfo(url string, token string, arcaeaid string) (reply []byte, err e
 func Best30(url string, token string, arcaeaid string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/user/best30?user="+arcaeaid+"&withrecent=false&overflow=10&withsonginfo=true", token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	return reply, err
 }
@@ -25,7 +26,7 @@ func Best30(url string, token string, arcaeaid string) (reply []byte, err error)
 func GetUserBest(url string, token string, arcaeaid string, songname string, difficuity string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/user/best?user="+arcaeaid+"&songname="+songname+"&difficulty="+difficuity+"&withsonginfo=true", token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	return reply, err
 }
@@ -33,7 +34,7 @@ func GetUserBest(url string, token string, arcaeaid string, songname string, dif
 func GetSongRandom(url string, token string, start string, end string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/song/random?start="+start+"&end="+end+"&withsonginfo=true", token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	return reply, err
 }
@@ -41,7 +42,7 @@ func GetSongRandom(url string, token string, start string, end string) (reply []
 func GetSongInfo(url string, token string, songname string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/song/info?songname="+songname, token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	return reply, err
 }
@@ -49,18 +50,19 @@ func GetSongInfo(url string, token string, songname string) (reply []byte, err e
 func GetSongPreview(url string, token string, songname string, difficuity string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/assets/preview?songname="+songname+"&difficulty="+difficuity, token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	return reply, err
 }
 
-func DrawRequestArc(workurl string, token string) (replyByte []byte, err error) {
+func DrawRequestArc(workurl string, token string) (reply []byte, err error) {
 	replyByte, err := http.Get(workurl)
 	replyByte.Header.Set("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
 	replyByte.Header.Set("Authorization", "Bearer "+token)
 	if err != nil {
-		return "nil", err
+		return nil, err
 	}
 	defer replyByte.Body.Close()
-	return replyByte, err
+	reply, err = io.ReadAll(replyByte.Body)
+	return reply, err
 }
