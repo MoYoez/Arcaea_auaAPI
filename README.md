@@ -6,5 +6,5 @@ Some Useful AUA API Written In go
 ## Usage
 
 ```
-go get -u github.com/MoYoez/Go-ArcaeaUnlimitedAPI
+go get -u github.com/MoYoez/Arcaea_auaAPI
 ```

@@ -1,3 +1,3 @@
-module github.com/MoYoez/Go-ArcaeaUnlimitedAPI
+module github.com/MoYoez/Arcaea_auaAPI
 
 go 1.19
