@@ -1,4 +1,5 @@
-package aua // Package aua
+// Package aua
+package aua
 
 import (
 	"bytes"
