@@ -11,7 +11,7 @@ import (
 
 // GetUserInfo Url 为完整的 ArcaeaAPI 请求，token 为此项目需要用到的 Auth，id是需要查询使用的id。
 func GetUserInfo(url string, token string, arcaeaid string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/user/info?user="+arcaeaid+"&recent=1&withsonginfo=true", token)
+	reply, err = DrawRequestArc(url+"/botarcapi/test/user/info?user="+arcaeaid+"&recent=1&withsonginfo=true", token)
 	if err != nil {
 		return nil, err
 	}
@@ -27,9 +27,9 @@ func Best30Deprecated(url string, token string, arcaeaid string) (reply []byte, 
 	return reply, err
 }
 
-// GetUserBest
+// GetUserBest w
 func GetUserBest(url string, token string, arcaeaid string, songname string, difficuity string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/user/best?user="+arcaeaid+"&songname="+songname+"&difficulty="+difficuity+"&withsonginfo=true", token)
+	reply, err = DrawRequestArc(url+"/botarcapi/test/user/best?user="+arcaeaid+"&songname="+songname+"&difficulty="+difficuity+"&withsonginfo=true", token)
 	if err != nil {
 		return nil, err
 	}
