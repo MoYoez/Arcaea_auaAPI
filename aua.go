@@ -3,6 +3,7 @@ package aua
 
 import (
 	"bytes"
+	"github.com/tidwall/gjson"
 	"image"
 	"io"
 	"net/http"
@@ -17,8 +18,8 @@ func GetUserInfo(url string, token string, arcaeaid string) (reply []byte, err e
 	return reply, err
 }
 
-// Best30 可以参考GetUserInfo
-func Best30(url string, token string, arcaeaid string) (reply []byte, err error) {
+// Best30Deprecated 可以参考GetUserInfo,目前已经被弃用。
+func Best30Deprecated(url string, token string, arcaeaid string) (reply []byte, err error) {
 	reply, err = DrawRequestArc(url+"/botarcapi/user/best30?user="+arcaeaid+"&withrecent=false&overflow=10&withsonginfo=true", token)
 	if err != nil {
 		return nil, err
@@ -64,6 +65,33 @@ func GetSongPreview(url string, token string, songname string, difficuity string
 		panic(err)
 	}
 	return images, err
+}
+
+// GetSessionQuery Get Session (query b30,need 5 people)
+func GetSessionQuery(url string, token string, id string) (sessionkey string, info string) {
+	getSession, err := DrawRequestArc(url+"/botarcapi/test/user/bests/session?user="+id, token)
+	if err != nil {
+		return "", ""
+	}
+	sessionInfo := gjson.Get(string(getSession), "content.session_info").String()
+	sessionStatus := gjson.Get(string(getSession), "status").String()
+	if sessionStatus == "0" {
+		return sessionInfo, ""
+	} else {
+		sessionMsg := gjson.Get(string(getSession), "message").String()
+		return sessionInfo, sessionMsg
+	}
+}
+
+// GetB30BySession Get B30 By Session (wait in line mode.)
+func GetB30BySession(url string, token string, sessionkey string) (reply []byte, msg string) {
+	reply, _ = DrawRequestArc(url+"/botarcapi/test/user/bests/result?sessioninfo="+sessionkey+"&overflow=10&withrecent=false&withsonginfo=true", token)
+	getStatus := gjson.Get(string(reply), "status").String()
+	if getStatus != "0" {
+		getMsg := gjson.Get(string(reply), "message").String()
+		return nil, getMsg
+	}
+	return reply, ""
 }
 
 // DrawRequestArc 发送请求结构体
