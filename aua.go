@@ -11,25 +11,16 @@ import (
 
 // GetUserInfo Url 为完整的 ArcaeaAPI 请求，token 为此项目需要用到的 Auth，id是需要查询使用的id。
 func GetUserInfo(url string, token string, arcaeaid string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/user/info?user="+arcaeaid+"&recent=1&withsonginfo=true", token)
+	reply, err = DrawRequestArc(url+"/arcapi/user/info?user="+arcaeaid+"&recent=1&withsonginfo=true", token)
 	if err != nil {
 		return nil, err
 	}
 	return reply, err
 }
 
-// Best30Deprecated 可以参考GetUserInfo,目前已经被弃用。
-func Best30Deprecated(url string, token string, arcaeaid string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/user/best30?user="+arcaeaid+"&withrecent=false&overflow=10&withsonginfo=true", token)
-	if err != nil {
-		return nil, err
-	}
-	return reply, err
-}
-
-// GetUserBest
+// GetUserBest 获取用户最新成绩
 func GetUserBest(url string, token string, arcaeaid string, songname string, difficuity string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/user/best?user="+arcaeaid+"&songname="+songname+"&difficulty="+difficuity+"&withsonginfo=true", token)
+	reply, err = DrawRequestArc(url+"/arcapi/user/best?user="+arcaeaid+"&songname="+songname+"&difficulty="+difficuity+"&withsonginfo=true", token)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +29,7 @@ func GetUserBest(url string, token string, arcaeaid string, songname string, dif
 
 // GetSongRandom 随机一首曲子（
 func GetSongRandom(url string, token string, start string, end string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/song/random?start="+start+"&end="+end+"&withsonginfo=true", token)
+	reply, err = DrawRequestArc(url+"/arcapi/song/random?start="+start+"&end="+end+"&withsonginfo=true", token)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +38,7 @@ func GetSongRandom(url string, token string, start string, end string) (reply []
 
 // GetSongInfo 获得歌曲信息
 func GetSongInfo(url string, token string, songname string) (reply []byte, err error) {
-	reply, err = DrawRequestArc(url+"/botarcapi/song/info?songname="+songname, token)
+	reply, err = DrawRequestArc(url+"/arcapi/song/info?songname="+songname, token)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +47,7 @@ func GetSongInfo(url string, token string, songname string) (reply []byte, err e
 
 // GetSongPreview 返回谱面预览图，需要歌曲名字和难度，如果无结果则说明谱面没有（
 func GetSongPreview(url string, token string, songname string, difficuity string) (images image.Image, err error) {
-	reply, err := DrawRequestArc(url+"/botarcapi/assets/preview?songname="+songname+"&difficulty="+difficuity, token)
+	reply, err := DrawRequestArc(url+"/arcapi/assets/preview?songname="+songname+"&difficulty="+difficuity, token)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +60,7 @@ func GetSongPreview(url string, token string, songname string, difficuity string
 
 // GetSessionQuery Get Session (query b30,need 5 people)
 func GetSessionQuery(url string, token string, id string) (sessionkey string, info string) {
-	getSession, err := DrawRequestArc(url+"/botarcapi/test/user/bests/session?user="+id, token)
+	getSession, err := DrawRequestArc(url+"/arcapi/user/bests/session?user="+id, token)
 	if err != nil {
 		return "", ""
 	}
@@ -85,7 +76,7 @@ func GetSessionQuery(url string, token string, id string) (sessionkey string, in
 
 // GetB30BySession Get B30 By Session (wait in line mode.)
 func GetB30BySession(url string, token string, sessionkey string) (reply []byte, msg string) {
-	reply, _ = DrawRequestArc(url+"/botarcapi/test/user/bests/result?sessioninfo="+sessionkey+"&overflow=10&withrecent=false&withsonginfo=true", token)
+	reply, _ = DrawRequestArc(url+"/arcapi/user/bests/result?sessioninfo="+sessionkey+"&overflow=10&withrecent=false&withsonginfo=true", token)
 	getStatus := gjson.Get(string(reply), "status").String()
 	if getStatus != "0" {
 		getMsg := gjson.Get(string(reply), "message").String()
@@ -93,6 +84,8 @@ func GetB30BySession(url string, token string, sessionkey string) (reply []byte,
 	}
 	return reply, ""
 }
+
+//
 
 // DrawRequestArc 发送请求结构体
 func DrawRequestArc(workurl string, token string) (reply []byte, err error) {
