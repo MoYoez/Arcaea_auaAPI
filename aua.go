@@ -60,7 +60,7 @@ func GetSongPreview(url string, token string, songname string, difficuity string
 
 // GetSessionQuery Get Session (query b30,need 5 people)
 func GetSessionQuery(url string, token string, id string) (sessionkey string, info string) {
-	getSession, err := DrawRequestArc(url+"/arcapi/user/bests/session?user="+id, token)
+	getSession, err := DrawRequestArc(url+"/arcapi/user/bests/session?user_name="+id, token)
 	if err != nil {
 		return "", ""
 	}
@@ -84,8 +84,6 @@ func GetB30BySession(url string, token string, sessionkey string) (reply []byte,
 	}
 	return reply, ""
 }
-
-//
 
 // DrawRequestArc 发送请求结构体
 func DrawRequestArc(workurl string, token string) (reply []byte, err error) {
