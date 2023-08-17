@@ -1,3 +1,5 @@
+## ARCHIVED, Thank You Lowiro. ^^
+
 # Arcaea_auaapi
 Some Useful AUA API Written In go
 
